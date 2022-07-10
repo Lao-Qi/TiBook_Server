@@ -1,0 +1,29 @@
+{
+    "name": "tibook_server",
+    "version": "1.0.0",
+    "description": "提书后端",
+    "main": "index.js",
+    "scripts": {
+        "start": "node ./index.js",
+        "dev": "node ./index.js && node ./chat_service/index.js",
+        "serve": "nodemon ./index.js",
+        "socket": "nodemon ./chat_service/index.js",
+        "generateKey": "node ./lib/generateKey.js"
+    },
+    "author": "WangLaoQi (https://github.com/Lao-Qi)",
+    "license": "MIT",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "cors": "^2.8.5",
+        "express": "^4.18.1",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^6.3.2",
+        "multer": "^1.4.4",
+        "redis": "^4.1.0",
+        "socket.io": "^4.5.0"
+    },
+    "devDependencies": {
+        "dotenv": "^16.0.1",
+        "nodemon": "^2.0.16"
+    }
+}
