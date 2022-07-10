@@ -9,29 +9,29 @@ const UserSchema = new mongoose.Schema(
             type: String,
             required: [true, "姓名字段不能为空"],
             minlength: [1, "姓名长度不能小于2"],
-            maxlength: [20, "姓名长度不能超过20"],
+            maxlength: [20, "姓名长度不能超过20"]
         },
         // 加密过的密码
         ping: {
             type: String,
-            required: [true, "Ping字段不能为空"],
+            required: [true, "Ping字段不能为空"]
         },
         // 账号
         account: {
             type: String,
             required: [true, "账号不能为空"],
             minlength: [6, "账号的长度不能小于10"],
-            maxLength: [24, "账号长度不能超过20"],
+            maxLength: [24, "账号长度不能超过20"]
         },
         // 头像路径
         avatar: {
             type: String,
-            default: "none",
+            default: "/resource/defaultAvater.jpg"
         },
         // 用户ip
         ip: {
             type: String,
-            required: true,
+            required: true
         },
         // 好友集合
         friends: {
@@ -40,17 +40,17 @@ const UserSchema = new mongoose.Schema(
                     // 好友账号
                     account: {
                         type: String,
-                        required: true,
+                        required: true
                     },
                     // 好友添加时间
                     AddTime: {
                         type: Date,
                         required: true,
-                        default: Date.now(),
-                    },
-                },
+                        default: Date.now()
+                    }
+                }
             ],
-            default: [],
+            default: []
         },
         // 用户所用的系统 或 浏览器内核
         System: String,
@@ -58,19 +58,19 @@ const UserSchema = new mongoose.Schema(
         RegTime: {
             type: Date,
             required: true,
-            default: Date.now(),
+            default: Date.now()
         },
         // 是否被删除
         del: {
             type: Boolean,
-            default: false,
-        },
+            default: false
+        }
     },
     {
         // 返回一个虚拟的_id获取路径
         id: true,
         // __v字段
-        versionKey: false,
+        versionKey: false
     }
 )
 

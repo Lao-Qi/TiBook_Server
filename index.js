@@ -1,6 +1,6 @@
 "use strict"
 require("dotenv").config({
-    path: "./.env",
+    path: "./.env"
 })
 const path = require("path")
 const { createServer } = require("http")
@@ -9,8 +9,7 @@ const cors = require("cors")
 const { connect } = require("mongoose")
 const apiRouter = require("./apiRouter.js")
 
-const MONGOOSE_URL =
-    process.env["MONGOOSE_URL"] || "mongodb://localhost:27017/chain_cs"
+const MONGOOSE_URL = process.env["MONGOOSE_URL"] || "mongodb://localhost:27017/chain_cs"
 const PORT = process.env["PORT"] || 8080
 const app = express()
 
