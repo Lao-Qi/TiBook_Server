@@ -4,13 +4,17 @@
     "description": "提书后端",
     "main": "index.js",
     "scripts": {
-        "start": "node ./index.js",
         "dev": "node ./index.js && node ./chat_service/index.js",
         "serve": "nodemon ./index.js",
         "socket": "nodemon ./chat_service/index.js",
-        "generateKey": "node ./lib/generateKey.js"
+        "generateKey": "node ./lib/generateKey.js",
+        "start": "pnpm run generateKey && pnpm run serve && pnpm run socket"
     },
-    "author": "WangLaoQi (https://github.com/Lao-Qi)",
+    "author": {
+        "name": "WangLaoQi",
+        "email": "2231675321@qq.com",
+        "url": "https://github.com/Lao-Qi"
+    },
     "license": "MIT",
     "dependencies": {
         "bcryptjs": "^2.4.3",
