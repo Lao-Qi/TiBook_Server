@@ -1,7 +1,7 @@
 "use strict"
 const bcrypt = require("bcryptjs")
 const RSA_JWT = require("../../lib/keys.js")
-const { Users } = require("../../model/model")
+const { Users, UserDetailed } = require("../../model/model")
 const router = require("express").Router()
 
 router.post("/register", async (req, res, next) => {
@@ -17,14 +17,14 @@ router.post("/register", async (req, res, next) => {
                         res.send({
                             code: 400,
                             body,
-                            msg: "名称或账号不合法",
+                            msg: "名称或账号不合法"
                         })
                     }
                 } else {
                     res.send({
                         code: 400,
                         body,
-                        msg: "账号已存在",
+                        msg: "账号已存在"
                     })
                 }
             })
@@ -32,7 +32,7 @@ router.post("/register", async (req, res, next) => {
                 res.send({
                     code: 500,
                     body,
-                    msg: "账号查找失败，可能是服务器内部原因",
+                    msg: "账号查找失败，可能是服务器内部原因"
                 })
                 console.error(err)
             })
@@ -40,7 +40,7 @@ router.post("/register", async (req, res, next) => {
         res.send({
             code: 404,
             body,
-            msg: "缺失数据",
+            msg: "缺失数据"
         })
     }
 })
@@ -49,23 +49,55 @@ router.post("/register", async (req, res) => {
     const body = req.body
     // 用私钥解除用户密码
     const PingCode = RSA_JWT.Decrypt(body.ping)
-    const doc = new Users({
+    Users.create({
         name: body.name,
         account: body.account,
         ping: bcrypt.hashSync(PingCode),
         ip: req.ip,
-        System: body.type || req.headers["user-agent"],
+        System: body.type || req.headers["user-agent"]
     })
-    doc.save()
-    res.send({
-        code: 200,
-        data: {
-            name: body.name,
-            account: body.account,
-            id: doc._id,
-        },
-        msg: "注册成功",
-    })
+        .then(userDoc => {
+            UserDetailed.create({
+                name: body.name,
+                account: body.account
+            })
+                .then(() => {
+                    res.send({
+                        code: 200,
+                        data: {
+                            name: body.name,
+                            account: body.account,
+                            body: {
+                                id: userDoc._id,
+                                account: userDoc.account
+                            }
+                        },
+                        msg: "注册成功"
+                    })
+                })
+                .catch(err => {
+                    res.send({
+                        code: 200,
+                        data: {
+                            name: body.name,
+                            account: body.account
+                        },
+                        msg: "详细信息表注册失败"
+                    })
+                    console.error(err)
+                })
+        })
+        .catch(err => {
+            res.send({
+                code: 200,
+                data: {
+                    name: body.name,
+                    account: body.account
+                },
+                msg: "基础信息表注册失败"
+            })
+            console.log(err)
+        })
 })
 
 module.exports = router
