@@ -6,6 +6,8 @@ const uploadAvatar = require("./User/uploadAvatar")
 const login = require("./User/login")
 // 注册
 const register = require("./User/register")
+// 删除
+const reomve = require("./User/remove")
 // 添加好友
 const addFriend = require("./User/addFriend")
 
@@ -14,5 +16,6 @@ router.use(uploadAvatar) // post /uploadAvatar
 router.use(login) // post /login
 router.use(register) // post /register
 router.use(addFriend) // post /addFriend
+router.use(reomve) // post /removeUser
 
 module.exports = router

@@ -1,6 +1,6 @@
 "use strict"
 const router = require("express").Router()
-const account = require("./Route/User")
+const user = require("./Route/User")
 const search = require("./Route/Search")
 const { publicKey, VerifyTimeIsOut } = require("./lib/keys.js")
 
@@ -9,7 +9,7 @@ router.use((_, res, next) => {
     res.set("Content-Type", "application/json; charset=utf-8")
     next()
 })
-router.use("/user", account)
+router.use("/user", user)
 router.use("/search", search)
 
 // 公钥接口
@@ -17,7 +17,7 @@ router.get("/publicKey", (_, res) => {
     // 发送服务端的公钥
     res.send({
         code: 200,
-        publicKey: Buffer.from(publicKey).toString("base64"),
+        publicKey: Buffer.from(publicKey).toString("base64")
     })
 })
 
@@ -28,20 +28,20 @@ router.post("/verifyToken", (req, res) => {
             res.send({
                 code: 200,
                 data: true,
-                msg: "token验证成功",
+                msg: "token验证成功"
             })
         } else {
             res.send({
                 code: 200,
                 data: false,
-                msg: "token已过期",
+                msg: "token已过期"
             })
         }
     } else {
         res.send({
             code: 404,
             data: false,
-            msg: "token为空",
+            msg: "token为空"
         })
     }
 })
