@@ -9,7 +9,7 @@ router.post("/register", async (req, res, next) => {
     if (body.name && body.ping && body.account) {
         FindAccount(body.account)
             .then(isExist => {
-                if (isExist) {
+                if (!isExist) {
                     // 验证用户数据是否合法
                     if (verification(body.name, 1, 10) && verification(body.account, 6, 14)) {
                         next()
@@ -68,8 +68,9 @@ router.post("/register", async (req, res) => {
                             name: body.name,
                             account: body.account,
                             body: {
-                                id: userDoc._id,
-                                account: userDoc.account
+                                name: userDoc.name,
+                                account: userDoc.account,
+                                avatar: userDoc.avatar
                             }
                         },
                         msg: "注册成功"
@@ -77,7 +78,7 @@ router.post("/register", async (req, res) => {
                 })
                 .catch(err => {
                     res.send({
-                        code: 200,
+                        code: 500,
                         data: {
                             name: body.name,
                             account: body.account
@@ -89,7 +90,7 @@ router.post("/register", async (req, res) => {
         })
         .catch(err => {
             res.send({
-                code: 200,
+                code: 500,
                 data: {
                     name: body.name,
                     account: body.account
@@ -106,7 +107,7 @@ module.exports = router
 function verification(data, minNumber, maxNumber) {
     const xss_reg = new RegExp("[<>\\/]/", "g")
     const string_reg = new RegExp(`[a-zA-Z0-9_.*&^%$#@!?)("':;}{\[\]\+=-_~\`|\u4e00-\u9fa5]{${minNumber},${maxNumber}}`)
-    return !(xss_reg.test(data) || !string_reg.test(data))
+    return xss_reg.test(data) || !string_reg.test(data)
 }
 
 // 查询账号是否存在
