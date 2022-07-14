@@ -41,7 +41,7 @@ router.post("/removeUser", async (req, res) => {
 
 function RemoveUserDetailed(account) {
     return new Promise((res, rej) => {
-        UserDetailed.remove({ account }, err => {
+        UserDetailed.deleteOne({ account }, err => {
             err ? rej(err) : res(account)
         })
     })
@@ -49,7 +49,7 @@ function RemoveUserDetailed(account) {
 
 function RemoveUser(account) {
     return new Promise((res, rej) => {
-        Users.remove({ account }, err => {
+        Users.deleteOne({ account }, err => {
             err ? rej(err) : res()
         })
     })
