@@ -4,6 +4,11 @@ const mongoose = require("mongoose")
 
 const UserDetailedSchema = new mongoose.Schema(
     {
+        // 基础信息表中的id
+        id: {
+            type: String,
+            required: [true, "用户基础信息表中的id不能为空"]
+        },
         // 账号
         account: {
             type: String,
