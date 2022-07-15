@@ -58,6 +58,7 @@ router.post("/register", async (req, res) => {
     })
         .then(userDoc => {
             UserDetailed.create({
+                id: userDoc._id,
                 name: body.name,
                 account: body.account
             })
@@ -65,13 +66,9 @@ router.post("/register", async (req, res) => {
                     res.send({
                         code: 200,
                         data: {
-                            name: body.name,
-                            account: body.account,
-                            body: {
-                                name: userDoc.name,
-                                account: userDoc.account,
-                                avatar: userDoc.avatar
-                            }
+                            name: userDoc.name,
+                            account: userDoc.account,
+                            avatar: userDoc.avatar
                         },
                         msg: "注册成功"
                     })
