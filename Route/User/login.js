@@ -10,13 +10,13 @@ router.post("/login", async (req, res, next) => {
         res.send({
             code: 400,
             body: req.body,
-            msg: "Ping字段为空",
+            msg: "Ping字段为空"
         })
     } else if (!req.body.account) {
         res.send({
             code: 400,
             body: req.body,
-            msg: "账号字段为空",
+            msg: "账号字段为空"
         })
     } else {
         const doc = await FindUser(req.body.account)
@@ -27,7 +27,7 @@ router.post("/login", async (req, res, next) => {
             res.send({
                 code: 404,
                 body: req.body,
-                msg: "用户不存在",
+                msg: "用户不存在"
             })
         }
     }
@@ -41,19 +41,26 @@ router.post("/login", async (req, res) => {
             account,
             name,
             // 设置有效时间一个月
-            outTime: Math.floor(Date.now() + 1000 * 60 * 60 * 24 * 30),
+            outTime: Math.floor(Date.now() + 1000 * 60 * 60 * 24 * 30)
         })
         res.send({
             code: 200,
             body: req.body,
-            token,
-            msg: "登录成功",
+            data: {
+                userDoc: {
+                    name,
+                    account,
+                    avatar: req.doc.avatar
+                },
+                token
+            },
+            msg: "登录成功"
         })
     } else {
         res.send({
             code: 400,
             body: req.body,
-            msg: "密码错误",
+            msg: "密码错误"
         })
     }
 })
