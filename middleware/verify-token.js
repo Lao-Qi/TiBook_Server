@@ -10,13 +10,13 @@ module.exports = async function verifyToken(req, res, next) {
         } else {
             res.send({
                 code: 400,
-                msg: "认证已过期",
+                msg: "认证已过期，请重新登录"
             })
         }
     } else {
         res.send({
             code: 400,
-            msg: "认证失败",
+            msg: "token不存在"
         })
     }
 }
