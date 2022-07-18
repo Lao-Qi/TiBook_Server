@@ -34,8 +34,8 @@ const UserDetailedSchema = new mongoose.Schema(
         },
         // 年龄
         age: {
-            type: Number,
-            default: 0
+            type: String,
+            default: "none"
         },
         // 性别
         gender: {
