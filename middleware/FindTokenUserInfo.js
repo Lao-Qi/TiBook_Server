@@ -5,7 +5,7 @@ module.exports = async function (req, res, next) {
         FindUserDetailed(req.tokenData)
             .then(doc => {
                 if (doc) {
-                    req.userinfo = doc
+                    req.userInfoDoc = doc
                     next()
                 } else {
                     res.send({
