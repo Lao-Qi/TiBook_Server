@@ -18,17 +18,13 @@ router.post("/uploadAvatar", verifyToken, async (req, res) => {
         if (doc) {
             doc.avatar = fileName
             doc.save()
-            writeFileSync(
-                path.join(__dirname, `../../static/user/avatar/${fileName}`),
-                body.img,
-                "base64"
-            )
+            writeFileSync(path.join(__dirname, `../../static/user/avatar/${fileName}`), body.img, "base64")
             res.send({
                 code: 200,
                 id,
                 body,
                 post: true,
-                msg: "上传成功",
+                msg: "上传成功"
             })
         } else {
             res.send({
@@ -36,7 +32,7 @@ router.post("/uploadAvatar", verifyToken, async (req, res) => {
                 id,
                 body,
                 post: false,
-                msg: "用户不存在",
+                msg: "用户不存在"
             })
         }
     } else {
@@ -45,7 +41,7 @@ router.post("/uploadAvatar", verifyToken, async (req, res) => {
             id: id,
             body,
             post: false,
-            msg: "数据缺失",
+            msg: "数据缺失"
         })
     }
 })
@@ -53,8 +49,8 @@ router.post("/uploadAvatar", verifyToken, async (req, res) => {
 module.exports = router
 
 async function AccountFindByID(id) {
-    return new Promise((res) => {
-        Users.findById(id).then((doc) => {
+    return new Promise(res => {
+        Users.findById(id).then(doc => {
             res(doc)
         })
     })
