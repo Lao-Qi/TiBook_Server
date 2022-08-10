@@ -1,8 +1,10 @@
 const { UserDetailed } = require("../model/model")
 
+// 查找token中对应用户的具体信息
 module.exports = async function (req, res, next) {
-    if (req.tokenData.account && req.tokenData.id) {
-        FindUserDetailed(req.tokenData)
+    const account = req.tokenData.account
+    if (account) {
+        FindUserDetailed(account)
             .then(doc => {
                 if (doc) {
                     req.userInfoDoc = doc
@@ -22,29 +24,14 @@ module.exports = async function (req, res, next) {
                 console.error(err)
             })
     } else {
-        res.send({
-            code: 404,
-            msg: "用户信息不齐全"
-        })
+        throw Error("使用FindTokenUserInfo中间件前要先使用verify-token中间件")
     }
 }
 
-function FindUserDetailed({ account, id }) {
+function FindUserDetailed(account) {
     return new Promise((res, rej) => {
-        UserDetailed.findOne(
-            {
-                $and: [
-                    {
-                        account
-                    },
-                    {
-                        id
-                    }
-                ]
-            },
-            (err, doc) => {
-                err ? rej(err) : res(doc)
-            }
-        )
+        UserDetailed.findOne({ account }, (err, doc) => {
+            err ? rej(err) : res(doc)
+        })
     })
 }

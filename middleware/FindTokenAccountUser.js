@@ -29,10 +29,7 @@ module.exports = async function FindTokenIDUser(req, res, next) {
                 console.error(err)
             })
     } else {
-        res.send({
-            code: 404,
-            msg: "账户为空"
-        })
+        throw Error("使用FindTokenAccountUser中间件前要先使用verify-token中间件")
     }
 }
 
