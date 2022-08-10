@@ -1,9 +1,9 @@
 const { Users } = require("../model/model")
 
 module.exports = async function FindTokenIDUser(req, res, next) {
-    const account = req.tokenData.account ?? req.body.account
+    const account = req.tokenData.account
     if (account) {
-        FindUser(req.tokenData.account)
+        FindUser(account)
             .then(doc => {
                 if (doc) {
                     req.doc = doc
@@ -36,7 +36,7 @@ module.exports = async function FindTokenIDUser(req, res, next) {
     }
 }
 
-async function FindUser(account) {
+function FindUser(account) {
     return new Promise((res, rej) => {
         Users.findOne(
             {

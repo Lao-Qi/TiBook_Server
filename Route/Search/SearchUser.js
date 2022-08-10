@@ -1,42 +1,61 @@
-const { Users } = require("../../model/model")
 const router = require("express").Router()
+const { Users } = require("../../model/model")
+const { setAvatarURL } = require("../../lib/SmallFunctionIntegration")
 
 router.get("/searchUser", async (req, res) => {
     const account = req.query.account
     if (account) {
+        FindUser(account)
+            .then(doc => {
+                res.send({
+                    code: 200,
+                    body: {
+                        account: req.query.account
+                    },
+                    data: {
+                        _id: doc._id,
+                        name: doc.name,
+                        account: doc.account,
+                        avatar: setAvatarURL(doc.avatar)
+                    },
+                    msg: "查询成功"
+                })
+            })
+            .catch(err => {
+                res.send({
+                    code: 500,
+                    body: {
+                        account: req.query.account
+                    },
+                    msg: "查询失败，可能为后端的原因"
+                })
+                console.error(err)
+            })
+    } else {
+        res.send({
+            code: 400,
+            msg: "缺失数据"
+        })
+    }
+})
+
+function FindUser(account) {
+    return new Promise((res, rej) => {
         Users.findOne(
-            { account },
+            {
+                account
+            },
             {
                 _id: 0,
                 name: 1,
                 account: 1,
-                avatar: 1,
+                avatar: 1
             },
-            null,
             (err, doc) => {
-                if (doc) {
-                    res.send({
-                        code: 200,
-                        account,
-                        user: doc,
-                        msg: "查找成功",
-                    })
-                } else {
-                    res.send({
-                        code: 404,
-                        account,
-                        msg: "用户不存在",
-                    })
-                }
+                err ? rej(err) : res(doc)
             }
         )
-    } else {
-        res.send({
-            code: 400,
-            account,
-            msg: "缺失数据",
-        })
-    }
-})
+    })
+}
 
 module.exports = router
