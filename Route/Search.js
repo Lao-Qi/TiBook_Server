@@ -1,3 +1,8 @@
+"use strict"
+/**
+ * 跟查询信息相关的接口
+ */
+
 const router = require("express").Router()
 
 // 查询匹配用户

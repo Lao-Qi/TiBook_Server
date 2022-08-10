@@ -1,8 +1,15 @@
-const router = require("express").Router()
-const { UserDetailed } = require("../../model/model")
-const verifyToken = require("../../middleware/verify-token")
+"use strict"
+/**
+ * 搜索用户并返回详细信息 GET
+ *
+ * account 要搜索的用户的账号 [必须]
+ */
 
-router.get("/searchUserInfo", verifyToken, async (req, res) => {
+const verifyToken = require("../../middleware/verify-token")
+const { UserDetailed } = require("../../model/model")
+const router = require("express").Router()
+
+router.get("/SearchUserInfo", verifyToken, async (req, res) => {
     if (!req.query.account) {
         res.send({
             code: 404,

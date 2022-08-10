@@ -1,41 +1,40 @@
-const router = require("express").Router()
+"use strict"
+/**
+ * 删除用户的接口，此接口为测试接口，因此没有写的那么严
+ *
+ * account 要删除的用户的账号  [必须]
+ */
+
 const { UserDetailed, Users } = require("../../model/model")
+const router = require("express").Router()
 
 router.post("/removeUser", async (req, res) => {
     const account = req.body.account
-    if (account) {
-        RemoveUserDetailed(account)
-            .then(account => {
-                RemoveUser(account)
-                    .then(() => {
-                        res.send({
-                            code: 200,
-                            account,
-                            msg: "用户删除成功"
-                        })
-                    })
-                    .catch(err => {
-                        res.send({
-                            code: 500,
-                            account,
-                            msg: "基础信息表中用户删除失败"
-                        })
-                        console.error(err)
-                    })
-            })
-            .catch(err => {
-                res.send({
-                    code: 500,
-                    account,
-                    msg: "详细信息表中用户删除失败"
-                })
-                console.error(err)
-            })
-    } else {
+    if (!account) {
         res.send({
             code: 404,
             msg: "参数为空"
         })
+        return
+    }
+
+    try {
+        await RemoveUserDetailed(account)
+        await RemoveUser(account)
+        res.send({
+            code: 200,
+            body: {
+                account: account
+            },
+            msg: "添加成功"
+        })
+    } catch {
+        res.send({
+            code: 500,
+            account,
+            msg: "删除失败"
+        })
+        console.error(err)
     }
 })
 

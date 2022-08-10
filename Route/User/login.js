@@ -1,56 +1,81 @@
 "use strict"
+/**
+ * 登录接口
+ *
+ * account  要登录的用户账号     [必须]
+ * ping 经过服务器公钥RSA加密后的登录的密码   [必须]
+ *
+ * code 状态码    [必有]
+ * data: {        [可能]
+ *      userDoc 用户基本信息
+ *      token 登录成功的token
+ * }
+ * msg 本次请求的结果说明  [必有]
+ */
 const bcryptjs = require("bcryptjs")
 const RSA_JWT = require("../../lib/keys.js")
 const { Users } = require("../../model/model")
+const { setAvatarURL } = require("../../lib/SmallFunctionIntegration")
 const router = require("express").Router()
 
-/** 登录 */
+// 检测数据完整性
 router.post("/login", async (req, res, next) => {
     if (!req.body.ping) {
         res.send({
             code: 400,
-            body: req.body,
             msg: "Ping字段为空"
         })
-    } else if (!req.body.account) {
+        return
+    }
+    if (!req.body.account) {
         res.send({
             code: 400,
-            body: req.body,
             msg: "账号字段为空"
         })
-    } else {
-        const doc = await FindUser(req.body.account)
-        if (doc) {
-            req.doc = doc
-            next()
-        } else {
-            res.send({
-                code: 404,
-                body: req.body,
-                msg: "用户不存在"
-            })
-        }
+        return
     }
+    FindUser(req.body.account)
+        .then(doc => {
+            if (doc) {
+                req.doc = doc
+                next()
+            } else {
+                res.send({
+                    code: 404,
+                    msg: "用户不存在"
+                })
+            }
+        })
+        .catch(err => {
+            res.send({
+                code: 500,
+                msg: "查询用户时报错，可能是服务器的原因"
+            })
+            console.error(err)
+        })
 })
 
 router.post("/login", async (req, res) => {
     if (bcryptjs.compareSync(RSA_JWT.Decrypt(req.body.ping), req.doc.ping)) {
-        const { _id, account, name } = req.doc
+        const { _id, account, name, avatar } = req.doc
+
+        // 设置用户的token
         const token = RSA_JWT.EncryptJWT({
             id: _id,
             account,
             name,
             // 设置有效时间一个月
-            outTime: Math.floor(Date.now() + 1000 * 60 * 60 * 24 * 30)
+            outTime: Math.floor(Date.now() + 1000 * 60 * 60 * 24 * 30),
+            avatar: setAvatarURL(avatar)
         })
+
         res.send({
             code: 200,
-            body: req.body,
             data: {
                 userDoc: {
                     name,
                     account,
-                    avatar: req.doc.avatar
+                    avatar: setAvatarURL(avatar)
                 },
                 token
             },
@@ -58,8 +83,7 @@ router.post("/login", async (req, res) => {
         })
     } else {
         res.send({
-            code: 400,
-            body: req.body,
+            code: 200,
             msg: "密码错误"
         })
     }
@@ -68,9 +92,7 @@ router.post("/login", async (req, res) => {
 module.exports = router
 
 async function FindUser(account) {
-    return new Promise(res => {
-        Users.findOne({ account: account }).then(doc => {
-            res(doc)
-        })
+    return new Promise((res, rej) => {
+        Users.findOne({ account: account }).then(res).catch(rej)
     })
 }

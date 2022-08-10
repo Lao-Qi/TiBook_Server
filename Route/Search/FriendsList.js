@@ -1,56 +1,24 @@
+"use strict"
+/**
+ * 获取对应token用户的好友列表 GET
+ */
+
 const VerifyToken = require("../../middleware/verify-token")
-const FindTokenIDUser = require("../../middleware/FindTokenAccountUser")
-const { Users } = require("../../model/model")
+const FindTokenAccountUser = require("../../middleware/FindTokenAccountUser")
+const { setAvatarURL } = require("../../lib/SmallFunctionIntegration")
 const router = require("express").Router()
 
-router.get("/FriendsList", VerifyToken, FindTokenIDUser, async (req, res) => {
-    const friendAccountList = req.doc.friends.map(friend => friend.account)
-    findUsers(friendAccountList)
-        .then(docs => {
-            res.send({
-                code: 200,
-                friendsList: req.doc.friends,
-                userList: docs,
-                msg: "获取成功"
-            })
-        })
-        .catch(err => {
-            console.error(err)
-            res.send({
-                code: 200,
-                friendList: req.doc.friend,
-                userList: [],
-                msg: "数据库查询失败"
-            })
-        })
-})
-
-async function findUsers(AccountList) {
-    return new Promise((res, rej) => {
-        Users.find(
-            {
-                $and: [
-                    {
-                        account: {
-                            $in: AccountList
-                        }
-                    },
-                    {
-                        del: false
-                    }
-                ]
-            },
-            {
-                _id: 1,
-                name: 1,
-                account: 1,
-                avatar: 1
-            },
-            (err, docs) => {
-                err ? rej(err) : res(docs)
-            }
-        )
+router.get("/FriendsList", VerifyToken, FindTokenAccountUser, async (req, res) => {
+    // 设置好友的头像地址
+    req.doc.friends.forEach(friends => {
+        friends.avatar = setAvatarURL(friends.avatar)
     })
-}
+
+    res.send({
+        code: 200,
+        firendsList: req.doc.friends,
+        msg: "获取成功"
+    })
+})
 
 module.exports = router

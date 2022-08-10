@@ -1,4 +1,8 @@
 "use strict"
+/**
+ * 用户信息操作相关的接口
+ */
+
 const router = require("express").Router()
 // 上传头像
 const uploadAvatar = require("./User/uploadAvatar")

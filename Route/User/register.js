@@ -1,4 +1,13 @@
 "use strict"
+/**
+ * 用户注册接口
+ *
+ * name 用户名称  [必须]
+ * ping 经过服务器公钥加密后的密码  [必须]
+ * account 用户的账号  [必须]
+ * type 用户注册时使用的系统  [可选]
+ */
+
 const bcrypt = require("bcryptjs")
 const RSA_JWT = require("../../lib/keys.js")
 const { Users, UserDetailed } = require("../../model/model")
@@ -54,21 +63,20 @@ router.post("/register", async (req, res) => {
         account: body.account,
         ping: bcrypt.hashSync(PingCode),
         ip: req.ip,
-        System: body.type || req.headers["user-agent"]
+        System: body.type ?? req.headers["user-agent"]
     })
         .then(userDoc => {
             UserDetailed.create({
                 id: userDoc._id,
-                name: body.name,
-                account: body.account
+                name: userDoc.name,
+                account: userDoc.account
             })
                 .then(() => {
                     res.send({
                         code: 200,
                         data: {
                             name: userDoc.name,
-                            account: userDoc.account,
-                            avatar: userDoc.avatar
+                            account: userDoc.account
                         },
                         msg: "注册成功"
                     })

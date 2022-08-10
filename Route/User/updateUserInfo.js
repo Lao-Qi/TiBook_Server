@@ -1,6 +1,13 @@
-const router = require("express").Router()
+"use strict"
+/**
+ * 修改用户详细信息的接口 POST
+ *
+ * from 用户要修改的信息表单 [必须](内部的信息为可选，可以不写全部)
+ */
+
 const VerifyToken = require("../../middleware/verify-token")
 const FindTokenUserInfo = require("../../middleware/FindTokenUserInfo")
+const router = require("express").Router()
 
 router.post("/userUpdateInfo", VerifyToken, FindTokenUserInfo, async (req, res) => {
     const from = req.body.from
@@ -19,6 +26,7 @@ router.post("/userUpdateInfo", VerifyToken, FindTokenUserInfo, async (req, res) 
             body: {
                 account: req.userInfoDoc.account
             },
+            post: true,
             msg: "信息修改成功"
         })
     } catch (err) {
@@ -27,6 +35,7 @@ router.post("/userUpdateInfo", VerifyToken, FindTokenUserInfo, async (req, res) 
             body: {
                 account: req.userInfoDoc.account
             },
+            post: false,
             msg: "修改失败，可能为服务器的问题"
         })
         console.error(err)
