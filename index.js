@@ -2,8 +2,8 @@
 require("dotenv").config({
     path: "./.env"
 })
+
 const path = require("path")
-const { createServer } = require("http")
 const express = require("express")
 const cors = require("cors")
 const { connect } = require("mongoose")
@@ -29,8 +29,6 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../demo/index.html"))
 })
 
-const server = createServer(app)
-
-server.listen(PORT, () => {
-    console.log("http://127.0.0.1:8080")
+app.listen(PORT, () => {
+    console.log(`http://${process.env["SERVER_IP"]}:${PORT}`)
 })
