@@ -22,13 +22,13 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cors())
 
-app.use("/user", express.static("./user"))
+app.use("/resource", express.static("./resource"))
 app.use("/api", apiRouter)
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "../demo/index.html"))
+    res.sendFile(path.join(__dirname, "/resource/page/index.html"))
 })
 
 app.listen(PORT, () => {
-    console.log(`http://${process.env["SERVER_IP"]}:${PORT}`)
+    console.log(`${process.env["RESOURCE_ORIGIN"]}:${PORT}`)
 })

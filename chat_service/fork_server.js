@@ -46,7 +46,7 @@ io.on("connection", socket => {
             from: socket.data.account,
             to: socket.data.room,
             date: Date.now(),
-            content,
+            content
         }
 
         socket.emit("message", strMsg)
@@ -89,20 +89,23 @@ io.on("connection", socket => {
     })
 })
 
-// 用户的基础验证
+/**
+ *
+ * @param {} socket
+ */
 function VerifyToken(socket) {
     const token = socket.handshake.auth.token
-    // token没过期
     if (RSA_JWT.VerifyTimeIsOut(token)) {
         const UserInfo = RSA_JWT.DecryptJWT(token)
-        // token解析正常
         if (UserInfo.account && UserInfo.name && UserInfo.id) {
             socket.data = UserInfo
         } else {
             socket.disconnect(true)
+            return
         }
     } else {
         socket.disconnect(true)
+        return
     }
 }
 

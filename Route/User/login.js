@@ -5,12 +5,6 @@
  * account  要登录的用户账号     [必须]
  * ping 经过服务器公钥RSA加密后的登录的密码   [必须]
  *
- * code 状态码    [必有]
- * data: {        [可能]
- *      userDoc 用户基本信息
- *      token 登录成功的token
- * }
- * msg 本次请求的结果说明  [必有]
  */
 const bcryptjs = require("bcryptjs")
 const RSA_JWT = require("../../lib/keys.js")

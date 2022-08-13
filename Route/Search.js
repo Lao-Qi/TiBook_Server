@@ -13,10 +13,13 @@ const SearchUser = require("./Search/SearchUser")
 const SearchUserInfo = require("./Search/SearchUserInfo")
 // 获取用户的好友列表
 const FriendsList = require("./Search/FriendsList")
+// 获取用户的好友列表的详细信息
+const FriendsInfoList = require("./Search/FriendsInfoList")
 
 router.use(SearchUsers) // get  /SearchUsers
 router.use(SearchUser) // get  /searchUser
 router.use(SearchUserInfo) // get
 router.use(FriendsList) // get  /FriendsList
+router.use(FriendsInfoList) // get /FriendsInfoList
 
 module.exports = router

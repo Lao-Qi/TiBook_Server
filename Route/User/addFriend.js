@@ -1,7 +1,7 @@
 "use strict"
 /**
  * 用户添加好友接口 POST
- * 
+ *
  * account 要添加的好友账号 [必须]
  */
 
@@ -12,7 +12,7 @@ const router = require("express").Router()
 
 router.post("/addFriend", VerifyToKen, FindTokenUser, async (req, res) => {
     const account = req.body.account
-    if(!account) {
+    if (!account) {
         res.send({
             code: 400,
             post: false,
@@ -22,7 +22,7 @@ router.post("/addFriend", VerifyToKen, FindTokenUser, async (req, res) => {
     }
     // 查询要添加的好友
     GetWantAddUser(req.body.account)
-        .then(wantAddFriend => {
+        .then(async wantAddFriend => {
             req.doc.friends.push({
                 _id: wantAddFriend._id,
                 name: wantAddFriend.name,
@@ -31,21 +31,21 @@ router.post("/addFriend", VerifyToKen, FindTokenUser, async (req, res) => {
             })
 
             try {
-                await req.doc
+                await req.doc.save()
                 res.send({
                     code: 200,
                     post: true,
                     data: {
-                        addAccount: wantAddFriend.account,
+                        addAccount: wantAddFriend.account
                     },
                     msg: "好友添加成功"
                 })
-            }catch(err) {
+            } catch (err) {
                 res.send({
                     code: 500,
                     post: false,
                     data: {
-                        addAccount: wantAddFriend.account,
+                        addAccount: wantAddFriend.account
                     },
                     msg: "好友添加失败，可能是服务器的原因"
                 })

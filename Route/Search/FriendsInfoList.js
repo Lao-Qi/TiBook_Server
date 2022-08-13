@@ -67,3 +67,5 @@ function findUsers(AccountList) {
         )
     })
 }
+
+module.exports = router
