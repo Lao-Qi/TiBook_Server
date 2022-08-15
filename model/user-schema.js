@@ -26,7 +26,7 @@ const UserSchema = new mongoose.Schema(
         // 头像路径
         avatar: {
             type: String,
-            default: "/resource/defaultAvater.jpg"
+            default: "none"
         },
         // 用户ip
         ip: {
@@ -37,8 +37,24 @@ const UserSchema = new mongoose.Schema(
         friends: {
             type: [
                 {
+                    // 好友在user-schema集合中的_id
+                    id: {
+                        type: mongoose.Types.ObjectId,
+                        required: true
+                    },
                     // 好友账号
                     account: {
+                        type: String,
+                        required: true
+                    },
+                    // 好友头像
+                    avatar: {
+                        type: String,
+                        required: true,
+                        default: "none"
+                    },
+                    // 好友名称
+                    name: {
                         type: String,
                         required: true
                     },

@@ -30,7 +30,7 @@ const UserDetailedSchema = new mongoose.Schema(
         // 头像路径
         avatar: {
             type: String,
-            default: "/resource/defaultAvater.jpg"
+            default: "none"
         },
         // 年龄
         age: {
