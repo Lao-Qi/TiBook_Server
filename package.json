@@ -4,10 +4,10 @@
     "description": "提书后端",
     "main": "index.js",
     "scripts": {
-        "dev": "node ./index.js && node ./chat_service/index.js",
+        "dev": "node ./index.js && node ./socket_communicas/index.js",
         "serve": "nodemon ./index.js",
         "build": "node build.js",
-        "socket": "nodemon ./chat_service/index.js",
+        "socket": "nodemon ./socket_communicas/index.js",
         "generateKey": "node ./lib/generateKey.js",
         "start": "pnpm run generateKey && pnpm run serve && pnpm run socket"
     },
