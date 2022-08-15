@@ -15,55 +15,63 @@ router.post("/addFriend", VerifyToKen, FindTokenUser, async (req, res) => {
     if (!account) {
         res.send({
             code: 400,
-            post: false,
+            add: false,
             msg: "参数缺失"
         })
         return
     }
     // 查询要添加的好友
-    GetWantAddUser(req.body.account)
-        .then(async wantAddFriend => {
+    GetUser(req.body.account)
+        .then(wantAddFriend => {
+            console.log(wantAddFriend)
             req.doc.friends.push({
-                _id: wantAddFriend._id,
+                id: wantAddFriend._id,
                 name: wantAddFriend.name,
                 account: wantAddFriend.account,
-                avatar: wantAddFriend.avatar
+                avatar: wantAddFriend.avatar,
+                AddTime: Date.now()
             })
 
-            try {
-                await req.doc.save()
-                res.send({
-                    code: 200,
-                    post: true,
-                    data: {
-                        addAccount: wantAddFriend.account
-                    },
-                    msg: "好友添加成功"
+            req.doc
+                .save()
+                .then(() => {
+                    res.send({
+                        code: 200,
+                        add: true,
+                        data: {
+                            addAccount: wantAddFriend.account
+                        },
+                        msg: "好友添加成功"
+                    })
                 })
-            } catch (err) {
-                res.send({
-                    code: 500,
-                    post: false,
-                    data: {
-                        addAccount: wantAddFriend.account
-                    },
-                    msg: "好友添加失败，可能是服务器的原因"
+                .catch(err => {
+                    res.send({
+                        code: 500,
+                        add: false,
+                        data: {
+                            addAccount: wantAddFriend.account
+                        },
+                        msg: "好友添加失败，可能是服务器的原因"
+                    })
+                    console.error(err)
                 })
-                console.error(err)
-            }
         })
         .catch(err => {
             res.send({
                 code: 404,
-                post: false,
+                add: false,
                 msg: "好友不存在"
             })
             console.error(err)
         })
 })
 
-// 查询好友是否存在
-function GetWantAddUser(account) {
+/**
+ * 获取用户
+ * @param {string} account
+ * @returns {any}
+ */
+function GetUser(account) {
     return new Promise((res, rej) => {
         Users.findOne(
             {
@@ -77,7 +85,7 @@ function GetWantAddUser(account) {
                 ]
             },
             {
-                _id: 0,
+                _id: 1,
                 name: 1,
                 account: 1,
                 avatar: 1
