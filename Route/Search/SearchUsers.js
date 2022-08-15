@@ -6,22 +6,20 @@
  */
 
 const { Users } = require("../../model/model")
+const { setAvatarURL } = require("../../lib/SmallFunctionIntegration")
 const router = require("express").Router()
 
 /** 搜索全部匹配的用户和群 */
 router.get("/SearchUsers", async (req, res) => {
-    const keyWorld = req.query.key
-    if (keyWorld) {
-        Promise.all([FindRegexNameUsers(keyWorld), FindRegexAccountUsers(keyWorld)])
+    const keyWord = req.query.key
+    if (keyWord) {
+        FuzzyFindUsers(keyWord)
             .then(matchUsers => {
                 res.send({
                     code: 200,
                     search: true,
-                    key: keyWorld,
-                    data: {
-                        RegexName: matchUsers[0],
-                        RegexAccount: matchUsers[1]
-                    },
+                    key: keyWord,
+                    data: matchUsers,
                     msg: "查询成功"
                 })
             })
@@ -29,18 +27,33 @@ router.get("/SearchUsers", async (req, res) => {
                 res.send({
                     code: 500,
                     search: false,
-                    key: keyWorld,
+                    key: keyWord,
                     msg: "搜索失败，可能为服务器的原因"
                 })
                 console.error(err)
             })
-
-        res.send({
-            code: 200,
-            search: true,
-            key: keyWorld,
-            List: matchResultList
-        })
+        // Promise.all([FuzzyFindUsers(keyWorld), FindMatchAccountUser(keyWorld)])
+        //     .then(matchUsers => {
+        //         res.send({
+        //             code: 200,
+        //             search: true,
+        //             key: keyWorld,
+        //             data: {
+        //                 matchUsers: matchUsers[0],
+        //                 matchAccountUser: matchUsers[1]
+        //             },
+        //             msg: "查询成功"
+        //         })
+        //     })
+        //     .catch(err => {
+        //         res.send({
+        //             code: 500,
+        //             search: false,
+        //             key: keyWorld,
+        //             msg: "搜索失败，可能为服务器的原因"
+        //         })
+        //         console.error(err)
+        //     })
     } else {
         res.send({
             code: 404,
@@ -51,13 +64,15 @@ router.get("/SearchUsers", async (req, res) => {
 })
 
 // 查找名称匹配的用户
-function FindRegexNameUsers(keyWorld) {
+function FuzzyFindUsers(keyWord) {
     return new Promise((res, rej) => {
         Users.find(
             {
-                name: {
-                    $regex: keyWorld
-                }
+                $or: [
+                    { name: { $regex: keyWord, $options: "$i" } },
+                    { account: { $regex: keyWord, $options: "$i" } },
+                    { account: keyWord }
+                ]
             },
             {
                 _id: 0,
@@ -66,30 +81,45 @@ function FindRegexNameUsers(keyWorld) {
                 avatar: 1
             },
             (err, docs) => {
-                err ? rej(err) : res(docs ?? [])
+                console.log(docs)
+                if (err) {
+                    rej(err)
+                } else if (docs) {
+                    for (let i = 0; i < docs.length; i++) {
+                        docs[i].avatar = setAvatarURL(docs[i].avatar)
+                    }
+                    res(docs)
+                } else {
+                    res([])
+                }
             }
         )
     })
 }
 
-// 查询账号匹配的用户
-async function FindRegexAccountUsers(account) {
-    return new Promise((res, rej) => {
-        Users.findOne(
-            {
-                account
-            },
-            {
-                _id: 0,
-                name: 1,
-                account: 1,
-                avatar: 1
-            },
-            (err, doc) => {
-                err ? rej(err) : res(doc)
-            }
-        )
-    })
-}
+// // 查询账号匹配的用户
+// function FindMatchAccountUser(account) {
+//     return new Promise((res, rej) => {
+//         Users.findOne(
+//             {
+//                 account
+//             },
+//             {
+//                 _id: 0,
+//                 name: 1,
+//                 account: 1,
+//                 avatar: 1
+//             },
+//             (err, doc) => {
+//                 if (err) {
+//                     rej(err)
+//                 } else {
+//                     doc && (doc.avatar = setAvatarURL(doc.avatar))
+//                     res(doc)
+//                 }
+//             }
+//         )
+//     })
+// }
 
 module.exports = router
