@@ -7,9 +7,10 @@
 
 const verifyToken = require("../../middleware/verify-token")
 const { UserDetailed } = require("../../model/model")
+const { setAvatarURL } = require("../../lib/SmallFunctionIntegration")
 const router = require("express").Router()
 
-router.get("/SearchUserInfo", verifyToken, async (req, res) => {
+router.get("/userInfo", verifyToken, async (req, res) => {
     if (!req.query.account) {
         res.send({
             code: 404,
@@ -24,14 +25,16 @@ router.get("/SearchUserInfo", verifyToken, async (req, res) => {
                 res.send({
                     code: 200,
                     query: req.query,
-                    data: doc,
+                    data: {
+                        ...doc._doc,
+                        avatar: setAvatarURL(doc.avatar)
+                    },
                     msg: "查询成功"
                 })
             } else {
                 res.send({
                     code: 404,
                     query: req.query,
-                    data: doc,
                     msg: "查询的用户不存在"
                 })
             }
@@ -50,6 +53,10 @@ function FindUserDetailed(account) {
         UserDetailed.findOne(
             {
                 account
+            },
+            {
+                _id: 0,
+                del: 0
             },
             (err, doc) => {
                 err ? rej(err) : res(doc)

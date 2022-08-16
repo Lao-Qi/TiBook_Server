@@ -10,7 +10,7 @@ const { setAvatarURL } = require("../../lib/SmallFunctionIntegration")
 const router = require("express").Router()
 
 /** 搜索全部匹配的用户和群 */
-router.get("/SearchUsers", async (req, res) => {
+router.get("/users", async (req, res) => {
     const keyWord = req.query.key
     if (keyWord) {
         FuzzyFindUsers(keyWord)
@@ -32,28 +32,6 @@ router.get("/SearchUsers", async (req, res) => {
                 })
                 console.error(err)
             })
-        // Promise.all([FuzzyFindUsers(keyWorld), FindMatchAccountUser(keyWorld)])
-        //     .then(matchUsers => {
-        //         res.send({
-        //             code: 200,
-        //             search: true,
-        //             key: keyWorld,
-        //             data: {
-        //                 matchUsers: matchUsers[0],
-        //                 matchAccountUser: matchUsers[1]
-        //             },
-        //             msg: "查询成功"
-        //         })
-        //     })
-        //     .catch(err => {
-        //         res.send({
-        //             code: 500,
-        //             search: false,
-        //             key: keyWorld,
-        //             msg: "搜索失败，可能为服务器的原因"
-        //         })
-        //         console.error(err)
-        //     })
     } else {
         res.send({
             code: 404,
@@ -81,7 +59,6 @@ function FuzzyFindUsers(keyWord) {
                 avatar: 1
             },
             (err, docs) => {
-                console.log(docs)
                 if (err) {
                     rej(err)
                 } else if (docs) {
@@ -96,30 +73,5 @@ function FuzzyFindUsers(keyWord) {
         )
     })
 }
-
-// // 查询账号匹配的用户
-// function FindMatchAccountUser(account) {
-//     return new Promise((res, rej) => {
-//         Users.findOne(
-//             {
-//                 account
-//             },
-//             {
-//                 _id: 0,
-//                 name: 1,
-//                 account: 1,
-//                 avatar: 1
-//             },
-//             (err, doc) => {
-//                 if (err) {
-//                     rej(err)
-//                 } else {
-//                     doc && (doc.avatar = setAvatarURL(doc.avatar))
-//                     res(doc)
-//                 }
-//             }
-//         )
-//     })
-// }
 
 module.exports = router

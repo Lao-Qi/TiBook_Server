@@ -23,44 +23,59 @@ router.post("/addFriend", VerifyToKen, FindTokenUser, async (req, res) => {
     // 查询要添加的好友
     GetUser(req.body.account)
         .then(wantAddFriend => {
-            console.log(wantAddFriend)
-            req.doc.friends.push({
-                id: wantAddFriend._id,
-                name: wantAddFriend.name,
-                account: wantAddFriend.account,
-                avatar: wantAddFriend.avatar,
-                AddTime: Date.now()
-            })
+            if (wantAddFriend) {
+                // 用户和用户要添加的好友同时添加，保持同步
+                req.doc.friends.push({
+                    id: wantAddFriend._id,
+                    name: wantAddFriend.name,
+                    account: wantAddFriend.account,
+                    avatar: wantAddFriend.avatar,
+                    AddTime: Date.now()
+                })
 
-            req.doc
-                .save()
-                .then(() => {
-                    res.send({
-                        code: 200,
-                        add: true,
-                        data: {
-                            addAccount: wantAddFriend.account
-                        },
-                        msg: "好友添加成功"
-                    })
+                wantAddFriend.friends.push({
+                    id: req.doc._id,
+                    name: req.doc.name,
+                    account: req.doc.account,
+                    avatar: req.doc.avatar,
+                    AddTime: Date.now()
                 })
-                .catch(err => {
-                    res.send({
-                        code: 500,
-                        add: false,
-                        data: {
-                            addAccount: wantAddFriend.account
-                        },
-                        msg: "好友添加失败，可能是服务器的原因"
+
+                Promise.all([req.doc.save(), wantAddFriend.save()])
+                    .then(() => {
+                        res.send({
+                            code: 200,
+                            add: true,
+                            data: {
+                                addAccount: wantAddFriend.account
+                            },
+                            msg: "好友添加成功"
+                        })
                     })
-                    console.error(err)
+                    .catch(err => {
+                        res.send({
+                            code: 500,
+                            add: false,
+                            data: {
+                                addAccount: wantAddFriend.account
+                            },
+                            msg: "好友添加失败，可能是服务器的原因"
+                        })
+                        console.error(err)
+                    })
+            } else {
+                res.send({
+                    code: 404,
+                    add: false,
+                    msg: "好友不存在"
                 })
+            }
         })
         .catch(err => {
             res.send({
-                code: 404,
+                code: 500,
                 add: false,
-                msg: "好友不存在"
+                msg: "好友查询失败，可能是服务器的问题"
             })
             console.error(err)
         })
@@ -84,14 +99,8 @@ function GetUser(account) {
                     }
                 ]
             },
-            {
-                _id: 1,
-                name: 1,
-                account: 1,
-                avatar: 1
-            },
             (err, doc) => {
-                err || !doc ? rej(err) : res(doc)
+                err ? rej(err) : res(doc)
             }
         )
     })

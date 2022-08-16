@@ -9,7 +9,7 @@ const { Users } = require("../../model/model")
 const { setAvatarURL } = require("../../lib/SmallFunctionIntegration")
 const router = require("express").Router()
 
-router.get("/SearchUser", async (req, res) => {
+router.get("/user", async (req, res) => {
     const account = req.query.account
     if (!account) {
         res.send({
