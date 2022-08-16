@@ -1,3 +1,7 @@
+"use strict"
+/**
+ * 通过verify-token中间件返回的tokenData中的account字段获取用户的基本信息，并绑定到req.doc属性上
+ */
 const { Users } = require("../model/model")
 
 module.exports = async function FindTokenIDUser(req, res, next) {
