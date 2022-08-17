@@ -23,6 +23,12 @@ const UserDetailedSchema = new mongoose.Schema(
             minlength: [1, "姓名长度不能小于2"],
             maxlength: [20, "姓名长度不能超过20"]
         },
+        // 注册时间
+        registerTime: {
+            type: Date,
+            required: [true, "用户的注册时间"],
+            default: Date.now()
+        },
         mail: {
             type: String,
             default: "none"
