@@ -52,7 +52,6 @@ router.post("/login", async (req, res, next) => {
 router.post("/login", async (req, res) => {
     if (bcryptjs.compareSync(RSA_JWT.Decrypt(req.body.ping), req.doc.ping)) {
         const { _id, account, name, avatar } = req.doc
-
         // 设置用户的token
         const token = RSA_JWT.EncryptJWT({
             id: _id,
@@ -60,7 +59,7 @@ router.post("/login", async (req, res) => {
             name,
             // 设置有效时间一个月
             outTime: Math.floor(Date.now() + 1000 * 60 * 60 * 24 * 30),
-            avatar: setAvatarURL(avatar)
+            avatar
         })
 
         res.send({
@@ -69,7 +68,8 @@ router.post("/login", async (req, res) => {
                 userDoc: {
                     name,
                     account,
-                    avatar: setAvatarURL(avatar)
+                    avatar: setAvatarURL(avatar),
+                    id: _id
                 },
                 token
             },
@@ -87,6 +87,6 @@ module.exports = router
 
 async function FindUser(account) {
     return new Promise((res, rej) => {
-        Users.findOne({ account: account }).then(res).catch(rej)
+        Users.findOne({ account }).then(res).catch(rej)
     })
 }
