@@ -8,6 +8,8 @@ const router = require("express").Router()
 const uploadAvatar = require("./User/uploadAvatar")
 // 登录
 const login = require("./User/login")
+// token登录
+const tokenLogin = require("./User/tokenLogin")
 // 注册
 const register = require("./User/register")
 // 删除
@@ -21,6 +23,7 @@ const uploadPPictures = require("./User/uploadPPictures")
 router.use(uploadAvatar) // post /uploadAvatar
 router.use(uploadPPictures) // post /uploadPPictures
 router.use(login) // post /login
+router.use(tokenLogin) // post /tokenLogin
 router.use(register) // post /register
 router.use(addFriend) // post /addFriend
 router.use(reomve) // post /removeUser
