@@ -42,22 +42,6 @@ const UserSchema = new mongoose.Schema(
                         type: mongoose.Types.ObjectId,
                         required: true
                     },
-                    // 好友账号
-                    account: {
-                        type: String,
-                        required: true
-                    },
-                    // 好友头像
-                    avatar: {
-                        type: String,
-                        required: true,
-                        default: "none"
-                    },
-                    // 好友名称
-                    name: {
-                        type: String,
-                        required: true
-                    },
                     // 好友添加时间
                     AddTime: {
                         type: Date,

@@ -29,6 +29,7 @@ const UserDetailedSchema = new mongoose.Schema(
             required: [true, "用户的注册时间"],
             default: Date.now()
         },
+        // 邮箱
         mail: {
             type: String,
             default: "none"
