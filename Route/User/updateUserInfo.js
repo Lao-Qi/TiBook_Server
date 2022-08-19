@@ -9,35 +9,44 @@ const VerifyToken = require("../../middleware/verify-token")
 const FindTokenUserInfo = require("../../middleware/FindTokenUserInfo")
 const router = require("express").Router()
 
-router.post("/userUpdateInfo", VerifyToken, FindTokenUserInfo, async (req, res) => {
+router.post("/updateUserTextInfo", VerifyToken, FindTokenUserInfo, async (req, res) => {
     const from = req.body.from
+    console.log(from)
     const userInfoDoc = req.userInfoDoc
-    try {
-        userInfoDoc.name = from?.name ? from.name : userInfoDoc.name
-        userInfoDoc.age = from?.age ? from.age : userInfoDoc.age
-        userInfoDoc.gender = from?.gender ? from.gender : userInfoDoc.gender
-        userInfoDoc.birth = from?.birth ? from.birth : userInfoDoc.birth
-        userInfoDoc.address = from?.address ? from.address : userInfoDoc.address
-        userInfoDoc.signature = from?.signature ? from.signature : userInfoDoc.signature
 
-        await userInfoDoc.save()
+    if (!Object.keys(from).length) {
         res.send({
-            code: 200,
-            body: {
-                account: req.userInfoDoc.account
-            },
-            post: true,
-            msg: "信息修改成功"
-        })
-    } catch (err) {
-        res.send({
-            code: 500,
-            body: {
-                account: req.userInfoDoc.account
-            },
+            code: 304,
             post: false,
-            msg: "修改失败，可能为服务器的问题"
+            msg: "表单内容为空"
         })
-        console.error(err)
+        return
     }
+
+    from?.name && (userInfoDoc.name = from.name)
+    from?.age && (userInfoDoc.age = from.age)
+    from?.gender && (userInfoDoc.gender = from.gender)
+    from?.birth && (userInfoDoc.birth = from.birth)
+    from?.address && (userInfoDoc.address = from.address)
+    from?.signature && (userInfoDoc.signature = from.signature)
+
+    userInfoDoc
+        .save()
+        .then(() => {
+            res.send({
+                code: 200,
+                post: true,
+                msg: "信息修改成功"
+            })
+        })
+        .catch(err => {
+            res.send({
+                code: 500,
+                post: false,
+                msg: "修改失败，可能为服务器的问题"
+            })
+            console.error(err)
+        })
 })
+
+module.exports = router

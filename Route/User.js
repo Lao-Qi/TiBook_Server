@@ -18,6 +18,8 @@ const reomve = require("./User/remove")
 const addFriend = require("./User/addFriend")
 // 上传个性背景图片
 const uploadPPictures = require("./User/uploadPPictures")
+// 更新用户的详细信息
+const updateUserTextInfo = require("./User/updateUserInfo")
 
 // 注册路由
 router.use(uploadAvatar) // post /uploadAvatar
@@ -27,5 +29,6 @@ router.use(tokenLogin) // post /tokenLogin
 router.use(register) // post /register
 router.use(addFriend) // post /addFriend
 router.use(reomve) // post /removeUser
+router.use(updateUserTextInfo) // post /updateUserTextInfo
 
 module.exports = router
