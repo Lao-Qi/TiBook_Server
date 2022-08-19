@@ -16,14 +16,15 @@ const app = express()
 // 连接(可以在连接前操作数据库，操作会被缓存)
 connect(MONGOOSE_URL).then(() => {
     console.log("数据库连接成功")
+    // require("./test")
 })
 
-app.use(express.json())
+app.use(express.json({ limit: "3mb" }))
 app.use(express.urlencoded({ extended: false }))
 app.use(cors())
 
-app.use("/resource", express.static("./resource"))
 app.use("/api", apiRouter)
+app.use("/resource", express.static("./resource"))
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "/resource/page/index.html"))
