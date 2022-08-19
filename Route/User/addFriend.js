@@ -25,20 +25,15 @@ router.post("/addFriend", VerifyToKen, FindTokenUser, async (req, res) => {
         .then(wantAddFriend => {
             if (wantAddFriend) {
                 // 用户和用户要添加的好友同时添加，保持同步
+                const AddTime = Date.now()
                 req.doc.friends.push({
                     id: wantAddFriend._id,
-                    name: wantAddFriend.name,
-                    account: wantAddFriend.account,
-                    avatar: wantAddFriend.avatar,
-                    AddTime: Date.now()
+                    AddTime
                 })
 
                 wantAddFriend.friends.push({
                     id: req.doc._id,
-                    name: req.doc.name,
-                    account: req.doc.account,
-                    avatar: req.doc.avatar,
-                    AddTime: Date.now()
+                    AddTime
                 })
 
                 Promise.all([req.doc.save(), wantAddFriend.save()])
