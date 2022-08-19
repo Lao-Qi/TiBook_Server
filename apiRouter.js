@@ -9,6 +9,7 @@ router.use((_, res, next) => {
     res.set("Content-Type", "application/json; charset=utf-8")
     next()
 })
+
 router.use("/user", user)
 router.use("/search", search)
 
@@ -22,9 +23,9 @@ router.get("/publicKey", (_, res) => {
 })
 
 // 验证token接口
-router.post("/verifyToken", (req, res) => {
-    if (req.body?.token) {
-        if (VerifyTimeIsOut(req.body.token)) {
+router.get("/verifyToken", (req, res) => {
+    if (req.headers.token) {
+        if (VerifyTimeIsOut(req.headers.token)) {
             res.send({
                 code: 200,
                 data: true,
