@@ -29,3 +29,6 @@ keys
 *.sw?
 *.db
 *.local
+
+# test
+test.js
