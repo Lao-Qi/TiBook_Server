@@ -1,6 +1,6 @@
 "use strict"
 /**
- * 获取对应token用户的好友列表并包括好友的详细信息 GET
+ * 获取对应token用户的好友列表并包括好友的基本用户信息 GET
  */
 const VerifyToken = require("../../middleware/verify-token")
 const FindTokenAccountUser = require("../../middleware/FindTokenAccountUser")
@@ -19,10 +19,17 @@ router.get("/FriendsList", VerifyToken, FindTokenAccountUser, async (req, res) =
     }
 
     try {
-        const friendsInfoList = await findUsers(req.doc.friends.map(friend => friend.id))
+        const AddTimeMap = {}
+        const friendsInfoList = await findUsers(
+            req.doc.friends.map(friend => {
+                AddTimeMap[friend.id] = friend.AddTime
+                return friend.id
+            })
+        )
 
         friendsInfoList.forEach(friendInfo => {
-            friendsInfoList.avatar = setAvatarURL(friendInfo.avatar)
+            friendInfo.avatar = setAvatarURL(friendInfo.avatar)
+            friendInfo.AddTime = AddTimeMap[friendInfo.id]
         })
 
         res.send({
