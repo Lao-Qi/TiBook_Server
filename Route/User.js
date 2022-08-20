@@ -16,14 +16,14 @@ const register = require("./User/register")
 const reomve = require("./User/remove")
 // 添加好友
 const addFriend = require("./User/addFriend")
-// 上传个性背景图片
-const uploadPPictures = require("./User/uploadPPictures")
+// 上传图片
+const uploadImage = require("./User/uploadImage")
 // 更新用户的详细信息
 const updateUserTextInfo = require("./User/updateUserInfo")
 
 // 注册路由
 router.use(uploadAvatar) // post /uploadAvatar
-router.use(uploadPPictures) // post /uploadPPictures
+router.use(uploadImage) // post /uploadImage/:use{ avatar || PPictures }
 router.use(login) // post /login
 router.use(tokenLogin) // post /tokenLogin
 router.use(register) // post /register

@@ -27,7 +27,8 @@ router.get("/userInfo", verifyToken, async (req, res) => {
                     query: req.query,
                     data: {
                         ...doc._doc,
-                        avatar: setAvatarURL(doc.avatar)
+                        avatar: setAvatarURL(doc.avatar),
+                        cover: setCoverURL(doc.cover)
                     },
                     msg: "查询成功"
                 })
