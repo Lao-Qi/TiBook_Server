@@ -6,7 +6,7 @@
  */
 const verifyToken = require("../../middleware/verify-token")
 const FIndTokenUserInfo = require("../../middleware/FindTokenUserInfo")
-const { setAvatarURL } = require("../../lib/SmallFunctionIntegration")
+const { setAvatarURL, setCoverURL } = require("../../lib/SmallFunctionIntegration")
 const router = require("express").Router()
 
 router.get("/findTokenUserInfo", verifyToken, FIndTokenUserInfo, (req, res) => {
@@ -14,7 +14,8 @@ router.get("/findTokenUserInfo", verifyToken, FIndTokenUserInfo, (req, res) => {
         code: 200,
         data: {
             ...req.userInfoDoc._doc,
-            avatar: setAvatarURL(req.userInfoDoc.avatar)
+            avatar: setAvatarURL(req.userInfoDoc.avatar),
+            cover: setCoverURL(req.userInfoDoc.cover)
         },
         msg: "获取成功"
     })
