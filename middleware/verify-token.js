@@ -6,7 +6,7 @@
  */
 const RSA_JWT = require("../lib/keys.js")
 
-module.exports = async function verifyToken(req, res, next) {
+module.exports = async function (req, res, next) {
     const token = req.headers.token
     if (token) {
         if (RSA_JWT.VerifyTimeIsOut(token)) {

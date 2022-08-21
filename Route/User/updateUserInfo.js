@@ -11,7 +11,6 @@ const router = require("express").Router()
 
 router.post("/updateUserTextInfo", VerifyToken, FindTokenUserInfo, async (req, res) => {
     const from = req.body.from
-    console.log(from)
     const userInfoDoc = req.userInfoDoc
 
     if (!Object.keys(from).length) {

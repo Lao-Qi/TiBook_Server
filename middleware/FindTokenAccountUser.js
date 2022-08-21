@@ -4,7 +4,7 @@
  */
 const { Users } = require("../model/model")
 
-module.exports = async function FindTokenIDUser(req, res, next) {
+module.exports = async function (req, res, next) {
     const account = req.tokenData.account
     if (account) {
         FindUser(account)
