@@ -8,10 +8,11 @@
  * type 用户注册时使用的系统  [可选]
  */
 
-const bcrypt = require("bcryptjs")
+const { verification } = require("../../lib/SmallFunctionIntegration")
 const RSA_JWT = require("../../lib/keys.js")
 const { Users, UserDetailed } = require("../../model/model")
 const router = require("express").Router()
+const bcrypt = require("bcryptjs")
 
 router.post("/register", async (req, res, next) => {
     const body = req.body
@@ -107,13 +108,6 @@ router.post("/register", async (req, res) => {
 })
 
 module.exports = router
-
-// 验证用户名或账号是否合法
-function verification(data, minNumber, maxNumber) {
-    const xss_reg = new RegExp("[<>\\/]/", "g")
-    const string_reg = new RegExp(`[a-zA-Z0-9_.*&^%$#@!?)("':;}{\[\]\+=-_~\`|\u4e00-\u9fa5]{${minNumber},${maxNumber}}`)
-    return xss_reg.test(data) || !string_reg.test(data)
-}
 
 // 查询账号是否存在
 function FindAccount(account) {
