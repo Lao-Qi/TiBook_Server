@@ -7,7 +7,7 @@
 
 const verifyToken = require("../../middleware/verify-token")
 const { UserDetailed } = require("../../model/model")
-const { setAvatarURL } = require("../../lib/SmallFunctionIntegration")
+const { setAvatarURL, setCoverURL } = require("../../lib/SmallFunctionIntegration")
 const router = require("express").Router()
 
 router.get("/userInfo", verifyToken, async (req, res) => {

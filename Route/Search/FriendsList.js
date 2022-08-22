@@ -29,7 +29,7 @@ router.get("/FriendsList", VerifyToken, FindTokenAccountUser, async (req, res) =
 
         friendsInfoList.forEach(friendInfo => {
             friendInfo.avatar = setAvatarURL(friendInfo.avatar)
-            friendInfo.AddTime = AddTimeMap[friendInfo.id]
+            friendInfo.AddTime = AddTimeMap[friendInfo._id.toString()]
         })
 
         res.send({
@@ -62,13 +62,13 @@ function findUsers(idList) {
                 ]
             },
             {
-                _id: 0,
+                _id: 1,
                 name: 1,
                 account: 1,
                 avatar: 1
             },
             (err, docs) => {
-                err ? rej(err) : res(docs ?? [])
+                err ? rej(err) : res(JSON.parse(JSON.stringify(docs)) ?? [])
             }
         )
     })
