@@ -7,7 +7,7 @@
 
 const VerifyToKen = require("../../middleware/verify-token")
 const FindTokenUser = require("../../middleware/FindTokenAccountUser")
-const { Users } = require("../../model/model")
+const { GetUser } = require("../../lib/SmallFunctionIntegration")
 const router = require("express").Router()
 
 router.post("/addFriend", VerifyToKen, FindTokenUser, async (req, res) => {
@@ -75,30 +75,5 @@ router.post("/addFriend", VerifyToKen, FindTokenUser, async (req, res) => {
             console.error(err)
         })
 })
-
-/**
- * 获取用户
- * @param {string} account
- * @returns {any}
- */
-function GetUser(account) {
-    return new Promise((res, rej) => {
-        Users.findOne(
-            {
-                $and: [
-                    {
-                        account
-                    },
-                    {
-                        del: false
-                    }
-                ]
-            },
-            (err, doc) => {
-                err ? rej(err) : res(doc)
-            }
-        )
-    })
-}
 
 module.exports = router
