@@ -16,6 +16,8 @@ const register = require("./User/register")
 const reomve = require("./User/remove")
 // 添加好友
 const addFriend = require("./User/addFriend")
+// 删除好友
+const removeFriend = require("./User/removeFriend")
 // 更新用户的个性图片
 const uploadPPictures = require("./User/uploadPPictures")
 // 更新用户的详细信息
@@ -32,6 +34,7 @@ router.use(login) // post /login
 router.use(tokenLogin) // post /tokenLogin
 router.use(register) // post /register
 router.use(addFriend) // post /addFriend
+router.use(removeFriend) // post /removeFriend
 router.use(reomve) // post /removeUser
 router.use(updateUserTextInfo) // post /updateUserTextInfo
 router.use(updateAccount) // post /updateAccount
