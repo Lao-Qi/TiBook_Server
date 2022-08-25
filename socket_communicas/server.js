@@ -50,6 +50,7 @@ io.on("connection", socket => {
 
     // 客户端发送文本消息
     socket.on("client-send-message", msg => {
+        console.log(msg)
         // 确定消息的信息
         const messagrInfo = {
             from: socket.data.account,
@@ -58,11 +59,12 @@ io.on("connection", socket => {
         }
 
         // 返回本次发送的状态
-        socket.emit(`client-send-message-return-${msg.uid}`, { code: 200, msg: "发送成功" })
+        socket.emit(`client-send-message-return-${msg.mid}`, { code: 200, msg: "发送成功" })
         // 向自己发送消息
         socket.emit("receive-message", messagrInfo)
         // 向接收者发送消息
         io.to(socket.data.recipient).emit("receive-message", messagrInfo)
+        console.log(`${socket.account} ${socket.name} 向 ${socket.recipient} 发送消息 ${msg.content}`)
         // if (UserSet.has(socket.data.recipient)) {
         //     io.to(socket.data.recipient).emit("receive-message", messagrInfo)
         // }
@@ -77,7 +79,7 @@ io.on("connection", socket => {
         // 修改当前房间
         socket.data.recipient = recipient
         // 通知
-        socket.emit("client-toggle-recipient-return", recipient)
+        socket.emit("client-toggle-recipient-return", { code: 200, data: { recipient } })
         console.log(`用户 ${socket.data.account} ${socket.data.name} 加入了 ${recipient} 的房间`)
     })
 
