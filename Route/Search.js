@@ -17,6 +17,8 @@ const FriendsList = require("./Search/FriendsList")
 const findTokenUser = require("./Search/FindTokenUser")
 // 获取token用户的详细信息
 const findTokenUserInfo = require("./Search/FindTokenUserInfo")
+// 通过账号数组获取用户基本信息
+const findUsers = require("./Search/FindUsers")
 
 router.use(SearchUsers) // get  /SearchUsers
 router.use(SearchUser) // get  /searchUser
@@ -24,4 +26,5 @@ router.use(SearchUserInfo) // get
 router.use(FriendsList) // get  /FriendsList
 router.use(findTokenUser) // get /findTokenUser
 router.use(findTokenUserInfo) // get /findTokenUserInfo
+router.use(findUsers) // post /findUsers
 module.exports = router
