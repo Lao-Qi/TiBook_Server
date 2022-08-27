@@ -12,6 +12,8 @@ node_modules
 dist
 demo
 keys
+resource/avatar
+resource/PPictures
 
 # config file
 .env*
