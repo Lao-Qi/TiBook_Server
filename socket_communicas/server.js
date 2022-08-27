@@ -64,13 +64,12 @@ io.on("connection", socket => {
         socket.emit("receive-message", messagrInfo)
         // 向接收者发送消息
         io.to(socket.data.recipient).emit("receive-message", messagrInfo)
-        console.log(`${socket.account} ${socket.name} 向 ${socket.recipient} 发送消息 ${msg.content}`)
         // if (UserSet.has(socket.data.recipient)) {
         //     io.to(socket.data.recipient).emit("receive-message", messagrInfo)
         // }
 
         console.log(
-            `用户 ${socket.data.account} ${socket.data.name} 向 ${socket.data.recipient} 发布了消息: ${msg.content}`
+            `用户 ${socket.data.account} ${socket.data.name} 向 ${socket.data.recipient} 发布了消息 ${msg.content}`
         )
     })
 
