@@ -31,5 +31,5 @@ app.get("/", (req, res) => {
 })
 
 app.listen(PORT, () => {
-    console.log(`${process.env["RESOURCE_ORIGIN"]}:${PORT}`)
+    console.log(`http://127.0.0.1:${PORT}`)
 })
